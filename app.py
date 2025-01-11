@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, session
 import os, secrets
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)      # make secrt key using random
+app.secret_key = secrets.token_hex(32)      # make secret key using random
 
 
 @app.route("/", methods=['GET', 'POST'])
