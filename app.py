@@ -4,7 +4,7 @@ import os, secrets
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)      # make secret key using random
 
-
+# Main menu. User can choose either single player mode or PvP mode
 @app.route("/", methods=['GET', 'POST'])
 def main():
     if request.method == 'GET':

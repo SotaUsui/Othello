@@ -23,12 +23,14 @@ def initialize_board():
 
     return board
 
-# Update board by the move
-def update_board(board, player, r, c):
+# Update board by the current player's move.
+def update_board(board, player, r, c, flipped):
     pass
 
 # Get valid place of the current player
 def get_valid_place(board, player):
+
+    # return valid positions and each possible flipped discs' positions
     pass
 
 # Get score of black and white
