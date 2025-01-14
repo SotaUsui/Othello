@@ -81,7 +81,23 @@ def get_score(board):
 
 # Either board is full or both of the player can't put the disc.
 def game_end(board):
-    pass
+    # check if the board is full
+    full = True
+    for row in board:
+        if '-' in row:
+            full = False
+            break           # There is still an empty spot
+    if full:
+        return True         # board is full
+
+    # check the player's valid move
+    b_move = get_valid_place(board, 'B')
+    w_move = get_valid_place(board, 'W')
+
+    if not b_move and not w_move:
+        return True         # neither player can put disc.
+
+    return False
 
 # Return win player and score too.
 def result(board):
@@ -94,22 +110,62 @@ def result(board):
 
     return winner, black, white
 
-board = initialize_board()
-print(board)
-while (True):
+
+###########################
+####### play game #########
+###########################
+board = initialize_board()  # Initialize the board
+print("Initial Board:")
+for row in board:
+    print(" ".join(row))  # Display the board in a readable format
+
+# Keep looping until the game ends
+while not game_end(board):
+    # Black's turn
     sets = get_valid_place(board, 'B')
-    print(sets)
-    r,c = map(int, input().split())
-    board = update_board(board, 'B', r, c, sets[r,c])
-    print(board)
+    if sets:  # If Black has valid moves
+        print("Black's Turn")
+        print("Valid Moves:", sets)
+        r, c = map(int, input("Enter row and column (e.g., 3 2): ").split())
+        if (r, c) in sets:  # Check if the entered move is valid
+            board = update_board(board, 'B', r, c, sets[(r, c)])
+        else:
+            print("Invalid move. Please try again.")
+            continue  # Ask for input again
+        print("Board after Black's move:")
+        for row in board:
+            print(" ".join(row))
+    else:
+        print("Black has no valid moves. Skipping Black's turn.")
 
+    # Check if the game ends after Black's move
+    if game_end(board):
+        break
+
+    # White's turn
     sets = get_valid_place(board, 'W')
-    print(sets)
-    r, c = map(int, input().split())
-    board = update_board(board, 'W', r, c, sets[r,c])
-    print(board)
+    if sets:  # If White has valid moves
+        print("White's Turn")
+        print("Valid Moves:", sets)
+        r, c = map(int, input("Enter row and column (e.g., 3 2): ").split())
+        if (r, c) in sets:  # Check if the entered move is valid
+            board = update_board(board, 'W', r, c, sets[(r, c)])
+        else:
+            print("Invalid move. Please try again.")
+            continue  # Ask for input again
+        print("Board after White's move:")
+        for row in board:
+            print(" ".join(row))
+    else:
+        print("White has no valid moves. Skipping White's turn.")
 
-
-
-
-
+# After the game ends, display the results
+print("Game End!")
+winner, black, white = result(board)
+print(f"Final Score -> Black: {black}, White: {white}")
+if winner == 1:
+    print("Winner: Black")
+elif winner == 2:
+    print("Winner: White")
+else:
+    print("It's a tie!")
