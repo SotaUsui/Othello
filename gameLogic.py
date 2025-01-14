@@ -110,7 +110,7 @@ def result(board):
 
     return winner, black, white
 
-
+'''
 ###########################
 ####### play game #########
 ###########################
@@ -169,3 +169,4 @@ elif winner == 2:
     print("Winner: White")
 else:
     print("It's a tie!")
+'''
