@@ -1,13 +1,13 @@
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify
-import os, secrets
-
-from fontTools.varLib.instancer.names import updateNameTable
+import os, secrets, json
+from flask_cors import CORS
 
 from gameLogic import *
 from randomAI import *
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)      # make secret key using random
+CORS(app)  # To allow React to make cross-origin requests
 
 
 # Main menu. User can choose either single player mode or PvP mode
@@ -32,14 +32,21 @@ def main():
 def single_mode():
     if request.method == 'GET':
         # Initialize the game and render the front-end
-        global board, curr_player
         board = initialize_board()  # Initialize the board
         curr_player = 'B'           # Start with Black
-        return jsonify({'board': board, 'current_player': curr_player, 'valid': True})
+
+        # make JSON data
+        datas = {
+            'board' : board,
+            'curr_player' : curr_player,
+            'valid' : True,
+            'message' : 'good'
+        }
+        return render_template('single.html', data=datas)
 
 # Handle the move by the player
 @app.route("/single-mode/move/", methods=['POST'])
-def make_move():
+def move():
     board = session.get('board')
     curr_player = session.get('curr_player')
 
@@ -57,10 +64,10 @@ def make_move():
         session['board'] = board
         session['curr_player'] = curr_player
 
-        return jsonify({'board': board, 'current_player': curr_player, 'valid': True})
+        return jsonify({'board': board, 'curr_player': curr_player, 'valid': True})
 
     else:
-        return jsonify({'board': board, 'current_player': curr_player, 'valid': False, 'message': "invlid place"})
+        return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': 'Invalid'})
 @app.route("/single-mode/ai/", methods=['GET','POST'])
 def ai_turn():
     board = session.get('board')
