@@ -41,12 +41,32 @@ class SingleMode extends React.Component{
                                         border: "1px solid black",
                                         textAlign: "center",
                                         backgroundColor: "green",
-                                        // add white circle
-                                        {cell === "W" ? }
-                                        // add black circle
-                                        {cell === "B" ? }
+                                        verticalAlign: "middle",
+
                                     }}
                                 >
+                                    {cell === 'W' && (
+                                        <div
+                                            style={{
+                                                width: "30px",
+                                                height: "30px",
+                                                backgroundColor: "white",
+                                                borderRadius: "50%",
+                                                margin: "auto",
+                                            }}
+                                        />
+                                    )}
+                                    {cell === "B" && (
+                                        <div
+                                            style={{
+                                                width: "30px",
+                                                height: "30px",
+                                                backgroundColor: "black",
+                                                borderRadius: "50%",
+                                                margin: "auto",
+                                            }}
+                                        />
+                                    )}
                                 </td>
                             ))}
                         </tr>
