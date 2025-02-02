@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Main page</title>
-        <!-- <link rel="stylesheet" href="../static/css/styles.css"> -->
+        <link rel="stylesheet" href="../static/css/styles.css">
     </head>
 
     <body>
@@ -14,8 +14,21 @@
 
         <h2 div id = "buttons">
             <form method='POST'>
-                <button type="submit" name="button" value="single">Single mode</button>
-                <button type="submit" name="button" value="pvp">PvP mode</button>
+                <!-- single player mode -->
+                <button type="submit" name="button" value="single" class="styled-button">Single mode</button>
+
+                <!-- PvP mode -->
+                <div class="pvp-container">
+                    <button type="button" class="styled-button pvp-button">PvP mode</button>
+                    <div class="pvp-options">
+                        <button type="submit" name="button" value="create" class="option-button">Create Room</button>
+                        <label class="option-button join-room">
+                            Join Room
+                            <input type="text" name="game_id" placeholder="Enter Game ID">
+                            <button type="submit" name="button" value="join">Join</button>
+                        </label>
+                    </div>
+                </div>
             </form>
         </h2>
 
