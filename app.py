@@ -48,7 +48,7 @@ def main():
         elif pressed_button == 'join':
             room_id = request.form.get('game_id')  # Get the entered game ID
             # check if the room exists and there is only one player.
-            if room_id in session['room_id'] and len(rooms[room_id]['players']) == 1:
+            if room_id in rooms and len(rooms[room_id]['players']) == 1:
                 session['room_id'] = room_id
                 session['name'] = "player2"
                 session['hand'] = 'W'
@@ -158,9 +158,13 @@ def game_result():
 
 #############################################################
 # This is for PvP mode
-@app.route("/pvp/<room_id>")
-def pvp_room(room_id):
-    pass
+@socketio.on('game',namespace='/pvp_room')
+def pvp_room(data):
+    room_id = data.get('room_id')  # Get room_id from the received event
+    if len(rooms[room_id]['players']) == 2:
+        print("Game starts!!")
+
+    return room_id
 
 
 
