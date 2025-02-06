@@ -18,7 +18,7 @@ rooms = {}  # Dictionary to track game rooms (PvP mode)
 # Main menu. User can choose either single player mode or PvP mode
 @app.route("/", methods=['GET', 'POST'])
 def main():
-
+    print(rooms)
     if request.method == 'GET':
         return render_template('main.html')
 
@@ -33,7 +33,7 @@ def main():
 
         # PvP mode
         elif pressed_button == 'create':            # Create room for PvP mode
-            room_id = secrets.token_hex(6)          # Generate unique room id
+            room_id = random.randint(100000, 999999)          # Generate unique room id
             session['room_id'] = room_id            # Store room ID in session
             session['name'] = "Player1"
             session['hand'] = 'B'
@@ -46,7 +46,7 @@ def main():
             return redirect(url_for('pvp_room', room_id = room_id))     # Redirect to the room
 
         elif pressed_button == 'join':
-            room_id = request.form.get('game_id')  # Get the entered game ID
+            room_id = int(request.form.get('game_id'))  # Get the entered game ID
             # check if the room exists and there is only one player.
             if room_id in rooms and len(rooms[room_id]['players']) == 1:
                 session['room_id'] = room_id
@@ -158,14 +158,18 @@ def game_result():
 
 #############################################################
 # This is for PvP mode
-@socketio.on('game',namespace='/pvp_room')
-def pvp_room(data):
-    room_id = data.get('room_id')  # Get room_id from the received event
-    if len(rooms[room_id]['players']) == 2:
+@app.route('/pvp/<room_id>')
+def pvp_room(room_id):
+    print(rooms[room_id])
+    return render_template('pvp_room.html', room_id=room_id)
+
+
+@socketio.on('game', namespace='/pvp_room')
+def start_game(data):
+    room_id = data.get('room_id')
+    if len(rooms.get(room_id, {}).get('players', [])) == 2:
         print("Game starts!!")
-
-    return room_id
-
+        emit('game_start', {'message': 'Game has started!'}, room=room_id)
 
 
 ###########################################################
