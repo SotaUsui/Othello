@@ -6,6 +6,11 @@
     </head>
 
     <body>
+
+        {% if error %}
+            <h1 style="color: red;">{{ error }} </h1>
+        {% endif %}
+
         <h1>Othello game</h1>
 
         <h2 div id = "rule">

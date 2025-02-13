@@ -158,10 +158,11 @@ def game_result():
 
 #############################################################
 # This is for PvP mode
-@app.route('/pvp/<room_id>')
+@app.route('/pvp/<int:room_id>', methods=['GET','POST'])
 def pvp_room(room_id):
-    print(rooms[room_id])
-    return render_template('pvp_room.html', room_id=room_id)
+    if request.method == 'GET':
+        print(rooms[room_id])
+        return render_template('pvp_room.html', room_id=room_id)
 
 
 @socketio.on('game', namespace='/pvp_room')
