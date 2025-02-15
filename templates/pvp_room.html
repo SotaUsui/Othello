@@ -3,14 +3,27 @@
 <head>
     <title>PvP player mode</title>
     <link rel="stylesheet" href="../static/css/styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+            //var socket = io.connect("http://127.0.0.1:3000");
+            var socket = io.connect();
+
+            document.getElementById("readyButton").addEventListener("click", function () {
+                console.log('Clicked ready');
+                socket.emit("ready", {room_id: "{{ room_id }}", player: "{{ player }}"});
+            });
+        });
+    </script>
+
 </head>
 <body>
 
-<h1>Welcome to Room: <u>{{ room_id }}</u></h1>
-    <script>
-    </script>
+    <h1>Welcome to Room: <u>{{ room_id }}</u></h1>
+    <h2>You are {{ player }}</h2>
 
-    <div id="root"></div>
+    <button id="readyButton">Ready</button>
 
     <!--
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>

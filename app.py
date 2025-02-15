@@ -1,8 +1,11 @@
+# http://10.159.12.89:3000
+
+from gevent import monkey
+monkey.patch_all()      # to use gevent
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify
 import os, secrets, json
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
-
 
 from gameLogic import *
 from randomAI import *
@@ -10,8 +13,7 @@ from randomAI import *
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)      # make secret key using random
 CORS(app)  # To allow React to make cross-origin requests
-socketio = SocketIO(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 rooms = {}  # Dictionary to track game rooms (PvP mode)
 
@@ -40,7 +42,8 @@ def main():
             rooms[room_id] = {
                 'players': [],                  # store player name and their hand
                 'board': initialize_board(),    # initialize board
-                'turn' : 'B'
+                'turn' : 'B',                   # assign the hand
+                'ready' : {'Player1': False, 'Player2': False}  # ready for the game
             }
             rooms[room_id]['players'].append(("Player1", 'B'))
             return redirect(url_for('pvp_room', room_id = room_id))     # Redirect to the room
@@ -158,21 +161,28 @@ def game_result():
 
 #############################################################
 # This is for PvP mode
-@app.route('/pvp/<int:room_id>', methods=['GET','POST'])
+@app.route('/pvp/<int:room_id>')
 def pvp_room(room_id):
-    if request.method == 'GET':
+    print(rooms[room_id])
+    player = session.get('name')  # "Player1" or "Player2"
+    return render_template('pvp_room.html', room_id=room_id, player=player)
+
+@socketio.on('ready')
+def handle_ready(data):
+    room_id = int(data['room_id'])
+    player = data['player']
+    print(f'{player} clicked ready in {room_id}.')
+
+    if room_id in rooms and player in rooms[room_id]['ready']:
+        rooms[room_id]['ready'][player] = True
         print(rooms[room_id])
-        return render_template('pvp_room.html', room_id=room_id)
-
-
-@socketio.on('game', namespace='/pvp_room')
-def start_game(data):
-    room_id = data.get('room_id')
-    if len(rooms.get(room_id, {}).get('players', [])) == 2:
-        print("Game starts!!")
-        emit('game_start', {'message': 'Game has started!'}, room=room_id)
+        # Check if both players are ready
+        if rooms[room_id]['ready']['Player1'] and rooms[room_id]['ready']['Player2']:
+            pass
+        else:
+            pass
 
 
 ###########################################################
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=3000, debug=True, allow_unsafe_werkzeug=True)
