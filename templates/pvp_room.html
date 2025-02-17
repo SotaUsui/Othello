@@ -12,6 +12,7 @@
 
             document.getElementById("readyButton").addEventListener("click", function () {
                 console.log('Clicked ready');
+                this.disabled = true;
                 socket.emit("ready", {room_id: "{{ room_id }}", player: "{{ player }}"});
             });
         });

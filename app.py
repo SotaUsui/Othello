@@ -53,7 +53,7 @@ def main():
             # check if the room exists and there is only one player.
             if room_id in rooms and len(rooms[room_id]['players']) == 1:
                 session['room_id'] = room_id
-                session['name'] = "player2"
+                session['name'] = "Player2"
                 session['hand'] = 'W'
                 rooms[room_id]['players'].append(('Player2', 'W'))
                 return redirect(url_for('pvp_room', room_id=room_id))  # Redirect to room
