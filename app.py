@@ -173,14 +173,17 @@ def handle_ready(data):
     player = data['player']
     print(f'{player} clicked ready in {room_id}.')
 
-    if room_id in rooms and player in rooms[room_id]['ready']:
+    if room_id in rooms:
         rooms[room_id]['ready'][player] = True
         print(rooms[room_id])
         # Check if both players are ready
-        if rooms[room_id]['ready']['Player1'] and rooms[room_id]['ready']['Player2']:
-            pass
+        if rooms[room_id]['ready']['Player1'] == True and rooms[room_id]['ready']['Player2'] == True:
+            socketio.emit('game_start', {"room":room_id})
+
         else:
-            pass
+            print("waiting")
+            msg = "Waiting for the opponent..."
+            socketio.emit('waiting', {"room":room_id, "message": msg})
 
 
 ###########################################################

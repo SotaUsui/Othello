@@ -15,6 +15,18 @@
                 this.disabled = true;
                 socket.emit("ready", {room_id: "{{ room_id }}", player: "{{ player }}"});
             });
+
+
+            socket.on('game_start', (data) => {
+                alert("Game is starting!");
+                // return to game window
+            });
+
+            socket.on('waiting', (data) => {
+                console.log(data.room);
+                alert(data.message);
+            });
+
         });
     </script>
 
