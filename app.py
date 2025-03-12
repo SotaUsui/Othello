@@ -178,12 +178,24 @@ def handle_ready(data):
         print(rooms[room_id])
         # Check if both players are ready
         if rooms[room_id]['ready']['Player1'] == True and rooms[room_id]['ready']['Player2'] == True:
-            socketio.emit('game_start', {"room":room_id})
+            socketio.emit('game_start', {"room":room_id, "player": player})
 
         else:
             print("waiting")
             msg = "Waiting for the opponent..."
             socketio.emit('waiting', {"room":room_id, "message": msg})
+
+
+@app.route('/game/<int:room_id>/<player>')
+def game_page(room_id, player):
+    # if room doesn't exist
+    if room_id not in rooms:
+        return redirect(url_for('main'))  # Redirect to main page
+
+    return render_template('pvp_game.html', room_id=room_id, player=player)
+
+
+
 
 
 ###########################################################

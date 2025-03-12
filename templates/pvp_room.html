@@ -19,7 +19,8 @@
 
             socket.on('game_start', (data) => {
                 alert("Game is starting!");
-                // return to game window
+                // redirect to game page
+                window.location.href = "/game/"+ data.room + "/" + data.player;
             });
 
             socket.on('waiting', (data) => {
