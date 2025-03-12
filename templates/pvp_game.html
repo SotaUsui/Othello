@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <title>Game Room</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
-    <script>
+    <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             var socket = io.connect();
             console.log("Connected to game room {{ room_id }}");
 
-            // Example: Send an event to indicate the game has started
-            socket.emit("game_started", {room_id: "{{ room_id }}", player: "{{ player }}"});
+            // send the move by the player to the server
+            socket.emit("player_move", {room_id: "{{ room_id }}", player: "{{ player }}", move: {{ move }}""});
 
-            socket.on('message', (data) => {
+            // receive board and current player and game_done
+            socket.on('game_state', (data) => {
                 console.log(data);
             });
         });
@@ -20,6 +23,58 @@
 <body>
     <h1>Game Room: {{ room_id }}</h1>
     <h2>You are {{ player }}</h2>
-    <p>Game will be displayed here.</p>
+
+
+    <table id="board" style={{ borderCollapse: "collapse", margin: "auto" }}>
+        <tbody>
+            {board.map ((row, rowIndex) => (        // row index represent current row
+                <tr key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                        // each cell
+                        <td
+                                key={cellIndex}
+                                onClick={
+                                    player === "Black" ?
+                                    () => this.handleCellClick(rowIndex, cellIndex) : undefined
+                                }
+                                style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    border: "1px solid black",
+                                    textAlign: "center",
+                                    backgroundColor: "green",
+                                    verticalAlign: "middle",
+
+                                }}
+                        >
+
+                        {cell === 'W' && (
+                            <div
+                                    style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        backgroundColor: "white",
+                                        borderRadius: "50%",
+                                        margin: "auto",
+                                    }}
+                            />
+                        )}
+                        {cell === "B" && (
+                            <div
+                                    style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        backgroundColor: "black",
+                                        borderRadius: "50%",
+                                        margin: "auto",
+                                    }}
+                            />
+                        )}
+                        </td>
+                    ))}
+                </tr>
+            ))}
+        </tbody>
+     </table>
 </body>
 </html>

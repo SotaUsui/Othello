@@ -120,7 +120,10 @@ class SingleMode extends React.Component{
         return (
             <div>
                 {!game_over && (
-                    <div id="turn"> <strong>{player}</strong> turn</div>
+                    <>
+                        <div id="turn"> <strong>{player}</strong> turn</div>
+                        //<div id="score"> Black {black} vs White {white}</div>
+                    </>
                 )}
 
                 {game_over && (
