@@ -12,6 +12,7 @@
 
             document.getElementById("readyButton").addEventListener("click", function () {
                 console.log('Clicked ready');
+                alert("Waiting for the opponent...");
                 this.disabled = true;
                 socket.emit("ready", {room_id: "{{ room_id }}", player: "{{ player }}"});
             });
@@ -25,7 +26,7 @@
 
             socket.on('waiting', (data) => {
                 console.log(data.room);
-                alert(data.message);
+                // alert(data.message);
             });
 
         });
