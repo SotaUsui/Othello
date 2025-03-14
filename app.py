@@ -195,9 +195,6 @@ def game_page(room_id, player):
     return render_template('pvp_game.html', room_id=room_id, player=player)
 
 
-
-
-
 ###########################################################
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=3000, debug=True, allow_unsafe_werkzeug=True)
