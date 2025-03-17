@@ -178,7 +178,11 @@ def handle_ready(data):
         print(rooms[room_id])
         # Check if both players are ready
         if rooms[room_id]['ready']['Player1'] == True and rooms[room_id]['ready']['Player2'] == True:
-            socketio.emit('game_start', {"room":room_id, "player": player})
+            socketio.emit('game_start', {
+                "room":room_id
+                #"player1": "Player1",
+                #"player2": "Player2"
+            })
 
         else:
             print("waiting")

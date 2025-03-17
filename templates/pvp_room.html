@@ -20,8 +20,9 @@
 
             socket.on('game_start', (data) => {
                 alert("Game is starting!");
+                var player = "{{ player }}";
                 // redirect to game page
-                window.location.href = "/game/"+ data.room + "/" + data.player;
+                window.location.href = "/game/"+ data.room + "/" + player;
             });
 
             socket.on('waiting', (data) => {
