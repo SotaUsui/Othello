@@ -201,10 +201,6 @@ def game_page(room_id, player):
 @socketio.on('game_state')
 def gema_update(data):
     room_id = data["room_id"]
-
-    print("------------------")
-    print(room_id)
-    print("--------------------")
     # make sure the room id exist
     if room_id in rooms:
         board = rooms[room_id]["board"]
@@ -212,8 +208,6 @@ def gema_update(data):
         b,w = get_score(board)
         score = (b,w)
         is_done = game_end(board)
-        print("--------------------")
-        print(currPlayer)
         socketio.emit("game_update", {"board":board, "currPlayer":currPlayer, "score":score, "is_done":is_done})
 
 

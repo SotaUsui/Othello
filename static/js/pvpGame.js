@@ -42,7 +42,7 @@ class PvpGame extends React.Component {
                 <h2>You are {this.props.player}: {pColor}(color)</h2>
                 <h3>Current Turn: {cPlayer}</h3>
                 <h3>Score: {this.state.score[0]} - {this.state.score[1]}</h3>
-                <h3>this.state.board</h3>
+                <h3>{this.state.board}</h3>
             </div>
         );
     }
