@@ -210,6 +210,16 @@ def gema_update(data):
         is_done = game_end(board)
         socketio.emit("game_update", {"board":board, "currPlayer":currPlayer, "score":score, "is_done":is_done})
 
+@socketio.on('player_move')
+def pvp_move(data):
+    room_id = data["room_id"]
+    row, col = data["place"]
+    player = data["turn"]   # "B" or "W"
+
+    board = rooms[room_id]["board"]
+
+    print(row, col)
+    pass
 
 ###########################################################
 if __name__ == '__main__':
