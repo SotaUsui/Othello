@@ -1,4 +1,6 @@
 # http://10.159.12.89:3000
+# 10.159.14.102
+from imp import new_module
 
 from gevent import monkey
 monkey.patch_all()      # to use gevent
@@ -218,8 +220,29 @@ def pvp_move(data):
 
     board = rooms[room_id]["board"]
 
-    print(row, col)
-    pass
+    # check if player has a valid move.
+    valid_places = get_valid_place(board, player)
+
+    if (row,col) in valid_places:
+        new_board = update_board(board, player, row, col, valid_places[(row, col)])
+        next_player = 'W' if player == 'B' else 'B'
+
+        # Update the room status
+        rooms[room_id]["board"] = new_board
+        rooms[room_id]["turn"] = next_player
+
+        endcheck = game_end(new_board)
+
+        # check if other player has valid move
+        valid_places = get_valid_place(new_board, next_player)
+        if len(valid_places) == 0:
+            next_player = 'W' if next_player == 'B' else 'B'
+
+        b,w = get_score(new_board)
+        score = (b,w)
+        socketio.emit("game_update", {"board": new_board, "currPlayer": next_player, "score": score, "is_done": endcheck})
+
+
 
 ###########################################################
 if __name__ == '__main__':

@@ -12,8 +12,10 @@ class PvpGame extends React.Component {
     }
 
     componentDidMount(){
-        //this.socket = io.connect(`/game/${this.props.roomId}/${this.props.player}`);
-        this.socket = io.connect("http://localhost:3000");
+        // this.socket = io.connect("http://localhost:3000");
+        const serverIP = window.location.hostname;  // get the server IP dynamically
+        this.socket = io.connect(`http://${serverIP}:3000`);
+
 
         // send game room id to the server
         this.socket.emit("game_state", {room_id: this.props.roomId});
