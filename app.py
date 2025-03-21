@@ -231,7 +231,7 @@ def pvp_move(data):
         rooms[room_id]["board"] = new_board
         rooms[room_id]["turn"] = next_player
 
-        endcheck = game_end(new_board)
+        is_done = game_end(new_board)
 
         # check if other player has valid move
         valid_places = get_valid_place(new_board, next_player)
@@ -240,7 +240,7 @@ def pvp_move(data):
 
         b,w = get_score(new_board)
         score = (b,w)
-        socketio.emit("game_update", {"board": new_board, "currPlayer": next_player, "score": score, "is_done": endcheck})
+        socketio.emit("game_update", {"board": new_board, "currPlayer": next_player, "score": score, "is_done": is_done})
 
 
 

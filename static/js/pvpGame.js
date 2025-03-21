@@ -26,7 +26,7 @@ class PvpGame extends React.Component {
                 board : data.board,
                 currPlayer : data.currPlayer,
                 score : data.score,
-                isDone : data.isDone
+                isDone : data.is_done
             });
         });
     }
@@ -53,6 +53,13 @@ class PvpGame extends React.Component {
 
     }
 
+    goBackToMainMenu = () => {
+        if (this.socket) {
+            this.socket.disconnect();
+        }
+        window.location.href = "/";
+    };
+
 
 
     render() {
@@ -60,8 +67,28 @@ class PvpGame extends React.Component {
         let pColor = (this.props.player === "Player1") ? "B" : "W";
         let cPlayer = (this.state.currPlayer === 'B') ? "Player1" : "Player2"
 
+        let winner = (this.state.score[0] > this.state.score[1])
+            ? "Player1"
+            : (this.state.score[0] < this.state.score[1])
+                ? "Player2"
+                : "Draw";
+
+        console.log(this.state.isDone);
+
         return (
             <div>
+                 {this.state.isDone && (
+                    <div className="result-modal">
+                        <div className="modal-content">
+                            <h2>Game End</h2>
+                            <p>Winner: {winner === "Draw" ? "It's a tie!" : winner}</p>
+                            <p>Score: {this.state.score[0]} - {this.state.score[1]}</p>
+                            <button onClick={this.goBackToMainMenu}>Go to Main Menu</button>
+                        </div>
+                    </div>
+                )}
+
+
                 <h1>Room ID: {this.props.roomId}</h1>
                 <h2>You are {this.props.player}: {pColor}(color)</h2>
                 <h3>Current Turn: {cPlayer}</h3>
