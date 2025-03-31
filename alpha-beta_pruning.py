@@ -7,7 +7,7 @@ import gameLogic
 
 
 # assign value for position
-def value_position(board):
+def value_position(board, player):
     # [200,-25, 5, 5, 5, 5,-25,200]
     # [-25,-25,-1,-1,-1,-1,-25,-25]
     # [5  , -1, -, -, -, -, -1,  5]
@@ -16,18 +16,34 @@ def value_position(board):
     # [5  , -1, -, -, -, -, -1,  5]
     # [-25,-25,-1,-1,-1,-1,-25,-25]
     # [200,-25, 5, 5, 5, 5,-25,200]
+    score_map = {
+        "11": 200, "12": -25, "13": 5, "14":5, "15":5, "16":5, "17":-25, "18":200,
+        "21": -25, "22": -25, "23": -1, "24": -1, "25": -1, "26": -1, "27": -25, "28": -25,
+        "31": 5, "32": -1, "37": -1, "38": 5,
+        "41": 5, "42": -1, "44": 1, "45": 1, "47": -1, "48": 5,
+        "51": 5, "52": -1, "54": 1, "55": 1, "57": -1, "58": 5,
+        "61": 5, "62": -1, "67": -1, "68": 5,
+        "71": -25, "72": -25, "73": -1, "74": -1, "75": -1, "76": -1, "77": -25, "78": -25,
+        "81": 200, "82": -25, "83": 5, "84": 5, "85": 5, "86": 5, "87": -25, "88": 200,
+    }
 
     score =0
-
+    for i in range(8):
+        row = i+1
+        for j in range(8):
+            col = j+1
+            if board[i][j] == player:
+                place = str(row) + str(col)
+                if place in score_map:
+                    score += score_map[place]
 
     return score
-
 
 def heuristic(board, player):
     score =0
 
     # Value of board position
-    score += value_position(board)
+    score += value_position(board, player)  # player should be "W", since AI is always white turn
 
     # Difference in number of stones
 
