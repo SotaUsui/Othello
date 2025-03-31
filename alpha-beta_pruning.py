@@ -39,15 +39,30 @@ def value_position(board, player):
 
     return score
 
+# re
+def diff_disc(black, white):
+    # It is important in the end of the game.
+    return (white-black)*5
+
+
+
+
+
 def heuristic(board, player):
     score =0
+    num_disc, black, white = gameLogic.count_disc(board)
 
     # Value of board position
     score += value_position(board, player)  # player should be "W", since AI is always white turn
 
-    # Difference in number of stones
+    # Difference in number of stones. It is important only for last scene.
+    if num_disc > 53:
+        score += diff_disc(black, white)
 
-    # Difference of mobility (number of legal hands)
+    # Difference of mobility (number of legal hands). It's import for beggining of the game.
+    else:
+        score += diff_mobi(board, player)
+
 
     return score
 
