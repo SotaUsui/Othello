@@ -66,6 +66,15 @@ def get_valid_place(board, player):
 
     return valid_positions
 
+# Count disc on the board
+def count_disc(board):
+    space = 0
+    for line in board:
+        space += line.count('-')
+
+    return 64 - space
+
+
 # Get score of black and white
 def get_score(board):
     black = 0
