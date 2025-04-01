@@ -1,16 +1,30 @@
 # http://10.159.12.89:3000
 # 10.159.14.102
-from imp import new_module
 
+"""
+from imp import new_module
 from gevent import monkey
 monkey.patch_all()      # to use gevent
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify
 import os, secrets, json
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
+"""
+import types
+from gevent import monkey
+monkey.patch_all()  # to use gevent
+
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
+import os
+import secrets
+import json
+from flask_cors import CORS
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 from gameLogic import *
 from randomAI import *
+from alpha_beta_pruning import *
+
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)      # make secret key using random
@@ -113,14 +127,17 @@ def ai_turn():
     curr_player = session.get('curr_player')
 
     # AI move
-    move = randAI(board, curr_player)
+    #move = randAI(board, curr_player)
+    #move = smartAI(board, curr_player)
 
     # No valid move for AI
-    if move is None:
+    #if move is None:
+    if get_valid_place(board, curr_player) is None:
         curr_player = 'W' if curr_player == 'B' else 'B'
         session['curr_player'] = curr_player
         return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': "No valid move for AI", 'game_over': game_end(board)})
 
+    move = smartAI(board, curr_player)
     row, col, flipped = move
     # update the board and player
     board = update_board(board, curr_player, row, col, flipped)

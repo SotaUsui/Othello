@@ -8,23 +8,23 @@ import gameLogic
 
 # assign value for position
 def value_position(board, player):
-    # [200,-25, 5, 5, 5, 5,-25,200]
-    # [-25,-25,-1,-1,-1,-1,-25,-25]
+    # [200,-50, 5, 5, 5, 5,-50,200]
+    # [-50,-50,-1,-1,-1,-1,-50,-50]
     # [5  , -1, -, -, -, -, -1,  5]
     # [5  , -1, -, 1, 1, -, -1,  5]
     # [5  , -1, -, 1, 1, -, -1,  5]
     # [5  , -1, -, -, -, -, -1,  5]
-    # [-25,-25,-1,-1,-1,-1,-25,-25]
-    # [200,-25, 5, 5, 5, 5,-25,200]
+    # [-50,-50,-1,-1,-1,-1,-50,-50]
+    # [200,-50, 5, 5, 5, 5,-50,200]
     score_map = {
-        "11": 200, "12": -25, "13": 5, "14":5, "15":5, "16":5, "17":-25, "18":200,
-        "21": -25, "22": -25, "23": -1, "24": -1, "25": -1, "26": -1, "27": -25, "28": -25,
-        "31": 5, "32": -1, "37": -1, "38": 5,
-        "41": 5, "42": -1, "44": 1, "45": 1, "47": -1, "48": 5,
-        "51": 5, "52": -1, "54": 1, "55": 1, "57": -1, "58": 5,
-        "61": 5, "62": -1, "67": -1, "68": 5,
-        "71": -25, "72": -25, "73": -1, "74": -1, "75": -1, "76": -1, "77": -25, "78": -25,
-        "81": 200, "82": -25, "83": 5, "84": 5, "85": 5, "86": 5, "87": -25, "88": 200,
+        "11": 1000, "12": -500, "13": 15, "14":15, "15":15, "16":15, "17":-500, "18":1000,
+        "21": -500, "22": -500, "23": -10, "24": -10, "25": -10, "26": -10, "27": -500, "28": -500,
+        "31": 15, "32": -10, "37": -10, "38": 5,
+        "41": 15, "42": -10, "44": 50, "45": 50, "47": -10, "48": 15,
+        "51": 15, "52": -10, "54": 50, "55": 50, "57": -10, "58": 15,
+        "61": 15, "62": -10, "67": -10, "68": 15,
+        "71": -500, "72": -500, "73": -10, "74": -10, "75": -10, "76": -10, "77": -500, "78": -500,
+        "81": 1000, "82": -500, "83": 15, "84": 15, "85": 15, "86": 15, "87": -500, "88": 1000,
     }
 
     score =0
@@ -39,13 +39,17 @@ def value_position(board, player):
 
     return score
 
-# re
+# return difference of disc.
 def diff_disc(black, white):
     # It is important in the end of the game.
-    return (white-black)*5
+    return (white-black)*10
 
 
+def diff_mobi(board, player):
+    # AI is always white
+    AI_mobi = len(gameLogic.get_valid_place(board, player))
 
+    return (w_mobi - b_mobi)*2
 
 
 def heuristic(board, player):
@@ -55,13 +59,15 @@ def heuristic(board, player):
     # Value of board position
     score += value_position(board, player)  # player should be "W", since AI is always white turn
 
-    # Difference in number of stones. It is important only for last scene.
+    # Divide to early stages, midway, and late stages.
+    # Late stage
     if num_disc > 53:
+        # Difference in number of stones. It is important only for last scene.
         score += diff_disc(black, white)
-
-    # Difference of mobility (number of legal hands). It's import for beggining of the game.
-    else:
-        score += diff_mobi(board, player)
+    # Early stages, and midway.
+    #else:
+        # Difference of mobility (number of legal hands). It's import for beginning of the game.
+        #score += diff_mobi(board, player)
 
 
     return score
@@ -86,6 +92,10 @@ def minimax(board, depth, currPlayer, alpha, beta):
         else:   # Game over, no moves left
             return (None, None, heuristic(board, "W"))      # AI is White
 
+    if not valid_moves:
+        # return the evaluation of the opponent's board and their possible moves
+        return None, None, heuristic(board, currPlayer)
+
     # Maximize
     if currPlayer == "W":
         value = -math.inf
@@ -93,7 +103,7 @@ def minimax(board, depth, currPlayer, alpha, beta):
         for _move in valid_moves:
             new_board = copy.deepcopy(board)
             row,col = _move
-            new_board = gameLogic.update_board(board, "W", row, col, valid_moves[_move])
+            new_board = gameLogic.update_board(new_board, "W", row, col, valid_moves[_move])
             new_score = minimax(new_board, depth - 1, "B", alpha, beta)[2]
 
             # update value and alpha
@@ -116,7 +126,7 @@ def minimax(board, depth, currPlayer, alpha, beta):
         for _move in valid_moves:
             new_board = copy.deepcopy(board)
             row, col = _move
-            new_board = gameLogic.update_board(board, "B", row, col, valid_moves[_move])
+            new_board = gameLogic.update_board(new_board, "B", row, col, valid_moves[_move])
             new_score = minimax(new_board, depth - 1, "W", alpha, beta)[2]
 
             # update value and beta
@@ -134,7 +144,7 @@ def minimax(board, depth, currPlayer, alpha, beta):
 
 
 def smartAI(board, currPlayer):
-    depth = 3           # searching depth
+    depth = 4           # searching depth
     best_move = None
     alpha = -math.inf   # best (highest) value the maximizing player can guarantee. (best score for yourself)
     beta = math.inf     # best (lowest) value the minimizing player can guarantee.  (worst score for opponent)
