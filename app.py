@@ -1,5 +1,5 @@
-# http://10.159.12.89:3000
-# 10.159.14.102
+# http://0.0.0.3000 - local
+# http://[ip-address]:3000
 
 """
 from imp import new_module
