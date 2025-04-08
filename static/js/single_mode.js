@@ -10,8 +10,8 @@ class SingleMode extends React.Component{
             valid : props.data.valid,
             game_over : false,
             winner :'',
-            black : 0,
-            white : 0,
+            black : 2,
+            white : 2,
         };
     }
 
@@ -35,6 +35,8 @@ class SingleMode extends React.Component{
                 message: result.message,
                 valid : result.valid,
                 game_over: result.game_over,
+                black: result.black,
+                white: result.white
             });
             if (this.state.game_over){
                 this.game_result();
@@ -66,6 +68,8 @@ class SingleMode extends React.Component{
                 message: result.message,
                 valid : result.valid,
                 game_over : result.game_over,
+                black : result.black,
+                white : result.white
             });
             if (this.state.game_over){
                 this.game_result();
@@ -122,7 +126,7 @@ class SingleMode extends React.Component{
                 {!game_over && (
                     <>
                         <div id="turn"> <strong>{player}</strong> turn</div>
-                        //<div id="score"> Black {black} vs White {white}</div>
+                        <div id="score"> Black {black} vs White {white}</div>
                     </>
                 )}
 

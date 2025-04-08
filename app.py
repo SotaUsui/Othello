@@ -86,13 +86,16 @@ def single_mode():
         board = session.get('board')
         curr_player = session.get('curr_player')
 
+        _, black, white = count_disc(board)
         # make JSON data
         datas = {
             'board' : board,
             'curr_player' : curr_player,
             'valid' : True,
             'message' : 'good',
-            'game_over': False
+            'game_over': False,
+            'black': black,
+            'white': white
         }
         return render_template('single.html', data=datas)
 
@@ -116,27 +119,27 @@ def move():
         session['curr_player'] = curr_player
 
         endcheck = game_end(board)
-
-        return jsonify({'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'game_over': endcheck})
+        _, black, white = count_disc(board)
+        return jsonify({'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'black':black, 'white': white, 'game_over': endcheck})
 
     else:
-        return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': 'Invalid move.', 'game_over': False})
+        _, black, white = count_disc(board)
+        return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': 'Invalid move.', 'black':black, 'white': white, 'game_over': False})
 @app.route("/single-mode/ai/", methods=['POST'])
 def ai_turn():
     board = session.get('board')
     curr_player = session.get('curr_player')
 
-    # AI move
-    #move = randAI(board, curr_player)
-    #move = smartAI(board, curr_player)
-
     # No valid move for AI
     #if move is None:
-    if get_valid_place(board, curr_player) is None:
+    if get_valid_place(board, curr_player) == {}:
         curr_player = 'W' if curr_player == 'B' else 'B'
         session['curr_player'] = curr_player
-        return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': "No valid move for AI", 'game_over': game_end(board)})
+        _, black, white = count_disc(board)
+        return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': "No valid move for AI", 'black':black, 'white': white ,'game_over': game_end(board)})
 
+    # AI move
+    # move = randAI(board, curr_player)
     move = smartAI(board, curr_player)
     row, col, flipped = move
     # update the board and player
@@ -146,6 +149,7 @@ def ai_turn():
     # Update the session
     session['board'] = board
     session['curr_player'] = curr_player
+    _, black, white = count_disc(board)
 
     # check if player has a valid move.
     valid_places = get_valid_place(board, curr_player)
@@ -155,11 +159,11 @@ def ai_turn():
         session['curr_player'] = curr_player
         endcheck = game_end(board)
         return jsonify(
-            {'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'game_over': endcheck})
+            {'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'black': black, 'white': white,'game_over': endcheck})
 
     endcheck = game_end(board)
     print(row, col)
-    return jsonify({'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'game_over': endcheck})
+    return jsonify({'board': board, 'curr_player': curr_player, 'valid': True, 'message': "good", 'black': black, 'white': white ,'game_over': endcheck})
 
 @app.route("/single-mode/result/", methods=['POST'])
 def game_result():
