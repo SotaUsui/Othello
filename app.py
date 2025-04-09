@@ -139,7 +139,7 @@ def ai_turn():
         return jsonify({'board': board, 'curr_player': curr_player, 'valid': False, 'message': "No valid move for AI", 'black':black, 'white': white ,'game_over': game_end(board)})
 
     # AI move
-    # move = randAI(board, curr_player)
+    #move = randAI(board, curr_player)
     move = smartAI(board, curr_player)
     row, col, flipped = move
     # update the board and player
